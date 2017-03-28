@@ -136,3 +136,18 @@ $("#button06").click(function() {
 transport
 *****************************/
 Tone.Transport.start();
+
+/******************************
+a function that returns true is the user uses a mobile device
+*****************************/
+function isMobile() {
+  var mobile = (navigator.userAgent.toLowerCase().includes('iphone') ||
+              navigator.userAgent.toLowerCase().includes('android') ||
+              navigator.userAgent.toLowerCase().includes('ipad') ||
+              navigator.userAgent.toLowerCase().includes('ipod')
+  );
+
+  return mobile;
+}
+
+console.log(isMobile());
