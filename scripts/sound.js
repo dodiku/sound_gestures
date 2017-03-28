@@ -10,9 +10,20 @@ loopone.stop()
 loopone.start()
 
 */
+/******************************
+instrument configuration constructor
+*****************************/
+config = function (freq, vol, int){
+  this.frequency = freq;
+  this.volume = vol;
+  this.interval = int;
+};
 
-var freqOne = '440';
-var volOne = 0.5;
+
+/******************************
+intrument one
+*****************************/
+var instOne = new config ('440', 0.5, 0.5);
 
 var synthOne = new Tone.Synth({
 	'oscillator.type' : 'square8',
@@ -25,12 +36,76 @@ var synthOne = new Tone.Synth({
 
 var loopOne = new Tone.Loop(function(time){
 	//triggered every eighth note.
-  synthOne.triggerAttack(freqOne, time, volOne);
+  synthOne.triggerAttack(instOne.frequency, time, instOne.volume);
 	// console.log(time);
 }, '4n');
-
 loopOne.humanize = true;
 
+/******************************
+intrument two
+*****************************/
+// things to configure
+// synthTwo.envelope.attack
+// loopTwo.interval
+// frequency
+// volume
+
+var instTwo = new config ('440', 0.5, 0.5);
+
+var synthTwo = new Tone.MonoSynth({
+  'detune' : 10,
+	'oscillator' : {
+  	type : "fatsawtooth10",
+  },
+  'filter' : {
+    type:"peaking",
+  },
+	'envelope' : {
+  	attack : 1,
+    decay : 2,
+    sustain : 0,
+    // release : 4
+  },
+  'filterEnvelope':{
+    attack:0.6,
+    decay:0.2,
+    sustain:0,
+    // release:2,
+    baseFrequency:100,
+    octaves:10,
+    exponent:2,
+},
+}).toMaster();
+
+var loopTwo = new Tone.Loop(function(time){
+  synthTwo.triggerAttack(instTwo.frequency, time, instTwo.volume);
+}, '4n');
+loopTwo.humanize = true;
+
+/******************************
+intrument three
+*****************************/
+// things to configure
+// synthTwo.envelope.attack
+// loopTwo.interval
+// frequency
+// volume
+
+var instThree = new config ('110', 0.5, 0.5);
+var synthThree = new Tone.PluckSynth().toMaster();
+var loopThree = new Tone.Loop(function(time){
+  synthThree.triggerAttack(instThree.frequency, time, instThree.volume);
+}, '8n');
+loopThree.humanize = true;
+synthThree.dampening.value = 1500;
+synthThree.resonance.value = 15;
+synthThree.attackNoise = 0.5;
+
+
+
+/******************************
+event listeners
+*****************************/
 $("#button01").click(function() {
   loopOne.start(0.1);
 });
@@ -40,20 +115,24 @@ $("#button02").click(function() {
 });
 
 
+$("#button03").click(function() {
+  loopTwo.start(0.1);
+});
+
+$("#button04").click(function() {
+  loopTwo.stop();
+});
 
 
+$("#button05").click(function() {
+  loopThree.start(0.1);
+});
 
+$("#button06").click(function() {
+  loopThree.stop();
+});
 
-
+/******************************
+transport
+*****************************/
 Tone.Transport.start();
-
-
-// //use an array of objects as long as the object has a "time" attribute
-// var part = new Tone.Part(function(time, value){
-// 	//the value is an object which contains both the note and the velocity
-// 	synth.triggerAttackRelease(value.note, "8n", time, value.velocity);
-// }, [{"time" : 0, "note" : "C3", "velocity": 0.9},
-// 	   {"time" : "0:2", "note" : "C4", "velocity": 0.5}
-// ]).start(0);
-//
-// part.loopStart();
