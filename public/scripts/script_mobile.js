@@ -1,15 +1,15 @@
+/*
+
+this guy should be able to:
+[ ] get an instrument
+[v] send orientation data
+[ ] mute / change volume
+[ ] disconnect
+
+*/
+
 var socket = io();
-
-function setup(){
-
-}
-
-
-function draw(){
-
-}
-
-
+var volume = 1;
 function handleOrientation(event) {
 
   var array = [];
@@ -31,16 +31,17 @@ function handleOrientation(event) {
   return array;
 }
 
-$('body').append( "<div class='deviceorientation'></div>" );
-$('.deviceorientation').append( "<p style='font-weight:300;'>deviceorientation</p>" );
-$('.deviceorientation').append( "<p class='alpha'></p>" );
-$('.deviceorientation').append( "<p class='beta'></p>" );
-$('.deviceorientation').append( "<p class='gamma'></p>" );
-$('.deviceorientation').append( "<p class='absolute'></p>" );
-$('.deviceorientation').append( "</br>" );
+
+$( "#volume" ).change(function() {
+  volume = $('#volume').val();
+});
 
 window.addEventListener("deviceorientation", function(event){
   var orientationArray = handleOrientation(event);
-  // console.log(orientationArray);
+  orientationArray.push(parseFloat(volume));
+  var title = $('.id').text();
+  console.log(title);
+  var id = title.charAt(title.length-1);
+  orientationArray.push(parseInt(id));
   socket.emit('orientation', orientationArray);
 }, true);

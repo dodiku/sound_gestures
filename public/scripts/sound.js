@@ -10,6 +10,9 @@ loopone.stop()
 loopone.start()
 
 */
+
+var socket = io();
+
 /******************************
 instrument configuration constructor
 *****************************/
@@ -23,6 +26,31 @@ config = function (freq, vol, int){
 /******************************
 intrument one
 *****************************/
+/*
+configurations:
+  volume ==> instOne.volume = 1
+  frequency ==> instOne.frequency = <var> * 800 + 200
+  timing ==> loopOne.start().interval = 1
+  loopOne.start()
+  loopOne.stop()
+*/
+
+socket.on('confOne', function(array){
+  // console.log('got something');
+  // console.log(array);
+  loopOne.start(0.1);
+  instOne.frequency = array[1] * 800 + 200;
+  // console.log('frequency: ' + instOne.frequency);
+  loopOne.interval = array[0] * 2;
+  // console.log('interval: ' + loopOne.interval);
+  instOne.volume = array[3]/2;
+});
+
+socket.on('confOneDisconnect', function(){
+  console.log('one disconnected');
+});
+
+
 var instOne = new config ('440', 0.5, 0.5);
 
 var synthOne = new Tone.Synth({
@@ -50,6 +78,29 @@ intrument two
 // frequency
 // volume
 
+/*
+configurations:
+  volume ==> instOne.volume = 1
+  frequency ==> instOne.frequency = <var> * 800 + 200
+  timing ==> loopOne.start().interval = 1
+  loopOne.start()
+  loopOne.stop()
+*/
+
+socket.on('confTwo', function(array){
+  // console.log('got something');
+  // console.log(array);
+  loopTwo.start(0.1);
+  instTwo.frequency = array[1] * 320;
+  console.log('frequency: ' + instTwo.frequency);
+  loopTwo.interval = array[0] * 0.01;
+  console.log(array[0]);
+  console.log('interval: ' + loopTwo.interval);
+  synthTwo.envelope.attack = array[2];
+  instTwo.volume = array[3]/2;
+  console.log(array[3]);
+});
+
 var instTwo = new config ('440', 0.5, 0.5);
 
 var synthTwo = new Tone.MonoSynth({
@@ -61,13 +112,13 @@ var synthTwo = new Tone.MonoSynth({
     type:"peaking",
   },
 	'envelope' : {
-  	attack : 1,
-    decay : 2,
+  	attack : 0.1,
+    decay : 0.4,
     sustain : 0,
     // release : 4
   },
   'filterEnvelope':{
-    attack:0.6,
+    attack:0.2,
     decay:0.2,
     sustain:0,
     // release:2,
@@ -79,8 +130,8 @@ var synthTwo = new Tone.MonoSynth({
 
 var loopTwo = new Tone.Loop(function(time){
   synthTwo.triggerAttack(instTwo.frequency, time, instTwo.volume);
-}, '4n');
-loopTwo.humanize = true;
+}, '0.1');
+// loopTwo.humanize = true;
 
 /******************************
 intrument three
@@ -91,10 +142,31 @@ intrument three
 // frequency
 // volume
 
+/*
+configurations:
+  volume ==> instOne.volume = 1
+  frequency ==> instOne.frequency = <var> * 800 + 200
+  timing ==> loopOne.start().interval = 1
+  loopOne.start()
+  loopOne.stop()
+*/
+
+socket.on('confThree', function(array){
+  // console.log('got something');
+  // console.log(array);
+  loopThree.start(0.1);
+  synthThree.dampening.value = array[1] * 3000 + 1000;
+  // console.log('frequency: ' + instTwo.frequency);
+  synthThree.resonance.value = array[0] * 15;
+  // console.log('interval: ' + loopTwo.interval);
+  synthThree.attackNoise = array[2];
+  synthThree.volume.value = array[3]*60-60;
+});
+
 var instThree = new config ('110', 0.5, 0.5);
 var synthThree = new Tone.PluckSynth().toMaster();
 var loopThree = new Tone.Loop(function(time){
-  synthThree.triggerAttack(instThree.frequency, time, instThree.volume);
+  synthThree.triggerAttack(instThree.frequency, time);
 }, '8n');
 loopThree.humanize = true;
 synthThree.dampening.value = 1500;
