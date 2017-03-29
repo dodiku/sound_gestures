@@ -50,6 +50,7 @@ console.log("App is served on localhost: " + port);
 
 io.on('connection', function(socket){
   console.log('[io] a user connected');
+  socket.emit('hi', 'hi');
 
   socket.on('disconnect', function(){
     console.log('[io] user disconnected');
@@ -61,10 +62,15 @@ io.on('connection', function(socket){
     } else {
       console.log('[io] user is no desktop');
     }
+  });
 
+  socket.on('orientation', function(array){
+    console.log(array);
+    io.emit('orientationOne', array);
   });
 
 });
+
 
 // *************************
 // functions

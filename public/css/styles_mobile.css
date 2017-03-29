@@ -1,8 +1,11 @@
 html{
-background-color: green;
+/*background-color: Aquamarine;*/
+/*background-color: Beige;*/
+background-color: Cyan;
 }
 
 body {
+  font-family: 'Courier New', monospace;
   margin-top: 60px;
   color: #222;
   text-align: center;
