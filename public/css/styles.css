@@ -3,7 +3,34 @@ background-color: Azure;
 }
 
 body {
-  margin-top: 60px;
   color: #222;
+  /*text-align: center;*/
+}
+
+input {
+  margin-top: 4em;
+}
+
+.instrContainer {
+  /*padding-top: 60px;*/
   text-align: center;
+}
+
+
+.instr {
+  height: 100vh;
+  width: 30vw;
+  display: inline-block;
+}
+
+#instr01 {
+  background-color: cyan;
+}
+
+#instr02 {
+  background-color: SKYBLUE;
+}
+
+#instr03 {
+  background-color: SALMON;
 }
