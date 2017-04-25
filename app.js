@@ -39,11 +39,11 @@ app.get('/', function(req, res){
   var userAgent = req.get('User-Agent');
 
   if (isMobile(userAgent) === true) {
-    console.log('[👮 router]: user is connected from mobile  📱');
+    console.log('[👮  router]: user is connected from mobile  📱');
     res.render('wait');
 
   } else {
-    console.log('[👮 router]: user is connected from desktop  💻');
+    console.log('[👮  router]: user is connected from desktop  💻');
     res.render('index');
   }
 
@@ -80,6 +80,9 @@ app.get("*", function(req, res){
 io.on('connection', function(socket){
 
   socket.on('isInstrument', function(val){
+
+    console.log('[debug]:');
+    console.log(io.sockets.clients());
 
     var instr = getRandomInstrument();
 

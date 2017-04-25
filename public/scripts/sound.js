@@ -1,16 +1,3 @@
-/*
-- 4 intruments running in loops
-- changing:
- pitch = global variable
- timiing = loop.interval = "8n";
-  velocity == vol
-
-loopone.stop()
-
-loopone.start()
-
-*/
-
 var socket = io();
 
 /******************************
@@ -26,28 +13,16 @@ config = function (freq, vol, int){
 /******************************
 intrument one
 *****************************/
-/*
-configurations:
-  volume ==> instOne.volume = 1
-  frequency ==> instOne.frequency = <var> * 800 + 200
-  timing ==> loopOne.start().interval = 1
-  loopOne.start()
-  loopOne.stop()
-*/
-
 socket.on('confOne', function(array){
-  // console.log('got something');
-  // console.log(array);
   loopOne.start(0.1);
   instOne.frequency = array[1] * 800 + 200;
-  // console.log('frequency: ' + instOne.frequency);
   loopOne.interval = array[0] * 2;
-  // console.log('interval: ' + loopOne.interval);
   instOne.volume = array[3]/2;
 });
 
 socket.on('confOneDisconnect', function(){
-  console.log('one disconnected');
+  loopOne.stop();
+  console.log('🐨 [instrument 1] disconnected');
 });
 
 
@@ -63,43 +38,26 @@ var synthOne = new Tone.Synth({
 }).toMaster();
 
 var loopOne = new Tone.Loop(function(time){
-	//triggered every eighth note.
   synthOne.triggerAttack(instOne.frequency, time, instOne.volume);
-	// console.log(time);
 }, '4n');
 loopOne.humanize = true;
 
 /******************************
 intrument two
 *****************************/
-// things to configure
-// synthTwo.envelope.attack
-// loopTwo.interval
-// frequency
-// volume
-
-/*
-configurations:
-  volume ==> instOne.volume = 1
-  frequency ==> instOne.frequency = <var> * 800 + 200
-  timing ==> loopOne.start().interval = 1
-  loopOne.start()
-  loopOne.stop()
-*/
-
 socket.on('confTwo', function(array){
-  // console.log('got something');
-  // console.log(array);
   loopTwo.start(0.1);
-  instTwo.frequency = array[1] * 320;
-  console.log('frequency: ' + instTwo.frequency);
-  loopTwo.interval = array[0] * 0.01;
-  console.log(array[0]);
-  console.log('interval: ' + loopTwo.interval);
+  instTwo.frequency = array[1] * 220 + 100;
+  loopTwo.interval = array[0] * 0.1;
   synthTwo.envelope.attack = array[2];
   instTwo.volume = array[3]/2;
-  console.log(array[3]);
 });
+
+socket.on('confTwoDisconnect', function(){
+  loopTwo.stop();
+  console.log('🐯 [instrument 2] disconnected');
+});
+
 
 var instTwo = new config ('440', 0.5, 0.5);
 
@@ -136,31 +94,19 @@ var loopTwo = new Tone.Loop(function(time){
 /******************************
 intrument three
 *****************************/
-// things to configure
-// synthTwo.envelope.attack
-// loopTwo.interval
-// frequency
-// volume
-
-/*
-configurations:
-  volume ==> instOne.volume = 1
-  frequency ==> instOne.frequency = <var> * 800 + 200
-  timing ==> loopOne.start().interval = 1
-  loopOne.start()
-  loopOne.stop()
-*/
-
 socket.on('confThree', function(array){
-  // console.log('got something');
-  // console.log(array);
   loopThree.start(0.1);
   synthThree.dampening.value = array[1] * 3000 + 1000;
-  // console.log('frequency: ' + instTwo.frequency);
-  synthThree.resonance.value = array[0] * 15;
-  // console.log('interval: ' + loopTwo.interval);
+  synthThree.resonance.value = array[0] * 0.1 + 0.97;
   synthThree.attackNoise = array[2];
   synthThree.volume.value = array[3]*60-60;
+});
+
+socket.on('confThreeDisconnect', function(){
+  loopThree.stop();
+  synthThree.resonance.value = 0;
+  console.log('🦁 [instrument 3] disconnected');
+
 });
 
 var instThree = new config ('110', 0.5, 0.5);
@@ -170,7 +116,7 @@ var loopThree = new Tone.Loop(function(time){
 }, '8n');
 loopThree.humanize = true;
 synthThree.dampening.value = 1500;
-synthThree.resonance.value = 15;
+synthThree.resonance.value = 1;
 synthThree.attackNoise = 0.5;
 
 
@@ -202,6 +148,7 @@ $("#button05").click(function() {
 
 $("#button06").click(function() {
   loopThree.stop();
+  synthThree.resonance.value = 0;
 });
 
 /******************************
@@ -221,5 +168,3 @@ function isMobile() {
 
   return mobile;
 }
-
-console.log(isMobile());
