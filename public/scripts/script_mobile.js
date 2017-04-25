@@ -1,14 +1,12 @@
-/*
-
-this guy should be able to:
-[ ] get an instrument
-[v] send orientation data
-[ ] mute / change volume
-[ ] disconnect
-
-*/
-
 var socket = io();
+
+var title = $('.id').text();
+var id = title.charAt(title.length-1);
+id = parseInt(id);
+
+socket.emit('registerInstument', id);
+
+
 var volume = 1;
 function handleOrientation(event) {
 
@@ -39,9 +37,6 @@ $( "#volume" ).change(function() {
 window.addEventListener("deviceorientation", function(event){
   var orientationArray = handleOrientation(event);
   orientationArray.push(parseFloat(volume));
-  var title = $('.id').text();
-  console.log(title);
-  var id = title.charAt(title.length-1);
-  orientationArray.push(parseInt(id));
+  orientationArray.push(id);
   socket.emit('orientation', orientationArray);
 }, true);

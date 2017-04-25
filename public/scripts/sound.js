@@ -1,5 +1,20 @@
 var socket = io();
 
+socket.on('instrumentIsOn', function(val){
+  if (val === 1) {
+    console.log('🐨 [instrument 1] connected');
+  } else if (val === 2) {
+    console.log('🐯 [instrument 2] connected');
+  } else if (val === 3) {
+    console.log('🦁 [instrument 3] connected');
+  }
+});
+
+socket.on('confOneDisconnect', function(){
+  loopOne.stop();
+  console.log('🐨 [instrument 1] disconnected');
+});
+
 /******************************
 instrument configuration constructor
 *****************************/
@@ -20,10 +35,7 @@ socket.on('confOne', function(array){
   instOne.volume = array[3]/2;
 });
 
-socket.on('confOneDisconnect', function(){
-  loopOne.stop();
-  console.log('🐨 [instrument 1] disconnected');
-});
+
 
 
 var instOne = new config ('440', 0.5, 0.5);
