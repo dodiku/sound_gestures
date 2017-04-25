@@ -1,17 +1,33 @@
+// .one {
+//   background-color: Aquamarine;
+// }
+//
+// .two {
+//   background-color: Beige;
+// }
+//
+// .three {
+//   background-color: Cyan;
+// }
+
 var socket = io();
 
 socket.on('instrumentIsOn', function(val){
   if (val === 1) {
     console.log('🐨 [instrument 1] connected');
+    $('#instr01').css("background-color","Aquamarine");
   } else if (val === 2) {
     console.log('🐯 [instrument 2] connected');
+    $('#instr02').css("background-color","Beige");
   } else if (val === 3) {
     console.log('🦁 [instrument 3] connected');
+    $('#instr03').css("background-color","Cyan");
   }
 });
 
 socket.on('confOneDisconnect', function(){
   loopOne.stop();
+  $('#instr01').css("background-color","Azure");
   console.log('🐨 [instrument 1] disconnected');
 });
 
@@ -34,9 +50,6 @@ socket.on('confOne', function(array){
   loopOne.interval = array[0] * 2;
   instOne.volume = array[3]/2;
 });
-
-
-
 
 var instOne = new config ('440', 0.5, 0.5);
 
@@ -67,6 +80,7 @@ socket.on('confTwo', function(array){
 
 socket.on('confTwoDisconnect', function(){
   loopTwo.stop();
+  $('#instr02').css("background-color","Azure");
   console.log('🐯 [instrument 2] disconnected');
 });
 
@@ -117,6 +131,7 @@ socket.on('confThree', function(array){
 socket.on('confThreeDisconnect', function(){
   loopThree.stop();
   synthThree.resonance.value = 0;
+  $('#instr03').css("background-color","Azure");
   console.log('🦁 [instrument 3] disconnected');
 
 });

@@ -4,11 +4,28 @@ background-color: Azure;
 
 body {
   color: #222;
-  /*text-align: center;*/
 }
 
 input {
-  margin-top: 4em;
+  background-color: ALICEBLUE;
+  font-family: monospace;
+  border: 0.5px solid LIGHTGREY;
+  padding: 1em;
+  font-size: 0.9em;
+  color: #222;
+}
+
+input:active {
+  background-color: LIGHTGREY;
+  border: 0.5px solid LIGHTGREY;
+}
+
+input:focus {
+  outline:0;
+}
+
+.buttons {
+  margin-top: 90vh;
 }
 
 .instrContainer {
@@ -24,13 +41,13 @@ input {
 }
 
 #instr01 {
-  background-color: cyan;
+  background-color: Azure;
 }
 
 #instr02 {
-  background-color: SKYBLUE;
+  background-color: Azure;
 }
 
 #instr03 {
-  background-color: SALMON;
+  background-color: Azure;
 }
