@@ -1,5 +1,8 @@
 var socket = io();
 
+var noSleep = new NoSleep();
+noSleep.enable();
+
 var title = $('.id').text();
 var id = title.charAt(title.length-1);
 id = parseInt(id);

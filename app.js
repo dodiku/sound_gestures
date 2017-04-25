@@ -91,7 +91,6 @@ io.on('connection', function(socket){
     }
   });
 
-
   socket.on('registerInstument', function(id){
     console.log('[🌀  socket]: ' + socket.id + ' was assinged to instrument ' + (id-1));
     mobileInstruments[id-1] = socket.id;
