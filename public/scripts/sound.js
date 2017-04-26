@@ -1,36 +1,3 @@
-// .one {
-//   background-color: Aquamarine;
-// }
-//
-// .two {
-//   background-color: Beige;
-// }
-//
-// .three {
-//   background-color: Cyan;
-// }
-
-var socket = io();
-
-socket.on('instrumentIsOn', function(val){
-  if (val === 1) {
-    console.log('🐨 [instrument 1] connected');
-    $('#instr01').css("background-color","Aquamarine");
-  } else if (val === 2) {
-    console.log('🐯 [instrument 2] connected');
-    $('#instr02').css("background-color","Beige");
-  } else if (val === 3) {
-    console.log('🦁 [instrument 3] connected');
-    $('#instr03').css("background-color","Cyan");
-  }
-});
-
-socket.on('confOneDisconnect', function(){
-  loopOne.stop();
-  $('#instr01').css("background-color","Azure");
-  console.log('🐨 [instrument 1] disconnected');
-});
-
 /******************************
 instrument configuration constructor
 *****************************/
@@ -40,15 +7,56 @@ config = function (freq, vol, int){
   this.interval = int;
 };
 
+/******************************
+some animations...
+*****************************/
+var waveformOne = new Tone.Meter();
+var waveformTwo = new Tone.Meter();
+var waveformThree = new Tone.Meter();
+waveformThree.type = 'signal';
+
+var animOne = false;
+var animTwo = false;
+var animThree = false;
+
+
+/******************************
+sockets -- general (more sockets on each instrument)
+*****************************/
+var socket = io();
+
+socket.on('instrumentIsOn', function(val){
+  if (val === 1) {
+    console.log('🐨 [instrument 1] connected');
+    $('#instr01').css("background-color","rgba(127, 255, 212, 1)");
+    animOne = true;
+  } else if (val === 2) {
+    console.log('🐯 [instrument 2] connected');
+    $('#instr02').css("background-color","rgba(245, 245, 220, 1)");
+    animTwo = true;
+  } else if (val === 3) {
+    console.log('🦁 [instrument 3] connected');
+    $('#instr03').css("background-color","rgba(0, 255, 255, 1)");
+    animThree = true;
+  }
+});
 
 /******************************
 intrument one
 *****************************/
+
 socket.on('confOne', function(array){
   loopOne.start(0.1);
   instOne.frequency = array[1] * 800 + 200;
   loopOne.interval = array[0] * 2;
   instOne.volume = array[3]/2;
+});
+
+socket.on('confOneDisconnect', function(){
+  loopOne.stop();
+  $('#instr01').css("background-color","Azure");
+  console.log('🐨 [instrument 1] disconnected');
+  animOne = false;
 });
 
 var instOne = new config ('440', 0.5, 0.5);
@@ -60,7 +68,7 @@ var synthOne = new Tone.Synth({
     decay : 0.2,
     sustain : 0
   }
-}).toMaster();
+}).toMaster().connect(waveformOne);
 
 var loopOne = new Tone.Loop(function(time){
   synthOne.triggerAttack(instOne.frequency, time, instOne.volume);
@@ -82,6 +90,7 @@ socket.on('confTwoDisconnect', function(){
   loopTwo.stop();
   $('#instr02').css("background-color","Azure");
   console.log('🐯 [instrument 2] disconnected');
+  animTwo = false;
 });
 
 
@@ -110,7 +119,7 @@ var synthTwo = new Tone.MonoSynth({
     octaves:10,
     exponent:2,
 },
-}).toMaster();
+}).toMaster().connect(waveformTwo);
 
 var loopTwo = new Tone.Loop(function(time){
   synthTwo.triggerAttack(instTwo.frequency, time, instTwo.volume);
@@ -133,11 +142,11 @@ socket.on('confThreeDisconnect', function(){
   synthThree.resonance.value = 0;
   $('#instr03').css("background-color","Azure");
   console.log('🦁 [instrument 3] disconnected');
-
+  animThree = false;
 });
 
 var instThree = new config ('110', 0.5, 0.5);
-var synthThree = new Tone.PluckSynth().toMaster();
+var synthThree = new Tone.PluckSynth().toMaster().connect(waveformThree);
 var loopThree = new Tone.Loop(function(time){
   synthThree.triggerAttack(instThree.frequency, time);
 }, '8n');
