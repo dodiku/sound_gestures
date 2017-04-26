@@ -19,6 +19,20 @@ var animOne = false;
 var animTwo = false;
 var animThree = false;
 
+if (loopOne != 'stopped') {
+  animOne = true;
+}
+
+if (loopTwo != 'stopped') {
+  animTwo = true;
+}
+
+if (loopThree != 'stopped') {
+  animThree = true;
+}
+
+
+
 
 /******************************
 sockets -- general (more sockets on each instrument)
@@ -180,6 +194,7 @@ $("#button04").click(function() {
 
 $("#button05").click(function() {
   loopThree.start(0.1);
+  synthThree.resonance.value = 15;
 });
 
 $("#button06").click(function() {
